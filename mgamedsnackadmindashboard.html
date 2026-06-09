@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MegaMed Admin Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0c0c0f;
+  --bg2: #13131a;
+  --bg3: #1a1a24;
+  --card: #1e1e2a;
+  --border: rgba(255,255,255,0.08);
+  --accent: #7c5cfc;
+  --accent2: #9b7ffe;
+  --gold: #f5c842;
+  --text: #f0ece4;
+  --text2: #9e9a93;
+  --green: #22c55e;
+  --red: #ef4444;
+  --orange: #ff4500;
+  --radius: 16px;
+  --radius-sm: 10px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ─── LOGIN ─── */
+#login-screen {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,92,252,0.18) 0%, transparent 70%);
+}
+.login-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 48px 40px;
+  width: min(420px, 90vw);
+  text-align: center;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+}
+.login-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 3px; margin-bottom: 6px; }
+.login-logo span { color: var(--orange); }
+.login-subtitle { color: var(--text2); font-size: 0.82rem; margin-bottom: 32px; letter-spacing: 1px; text-transform: uppercase; }
+.login-input {
+  width: 100%; background: var(--bg3);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm); color: var(--text);
+  font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
+  padding: 13px 16px; margin-bottom: 14px;
+  transition: border-color 0.2s;
+  outline: none;
+}
+.login-input:focus { border-color: var(--accent); }
+.login-btn {
+  width: 100%; background: var(--accent); color: #fff;
+  border: none; border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif; font-weight: 700;
+  font-size: 0.95rem; padding: 14px;
+  cursor: pointer; transition: background 0.2s, transform 0.15s;
+  margin-top: 6px;
+}
+.login-btn:hover { background: var(--accent2); transform: scale(1.02); }
+.login-error {
+  color: var(--red); font-size: 0.8rem;
+  margin-top: 10px; display: none;
+  background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+  border-radius: 8px; padding: 8px 12px;
+}
+.login-error.show { display: block; }
+
+/* ─── APP LAYOUT ─── */
+#app { display: none; min-height: 100vh; }
+.top-bar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(12,12,15,0.92); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px; height: 60px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.top-bar-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px; }
+.top-bar-logo span { color: var(--orange); }
+.top-bar-right { display: flex; align-items: center; gap: 14px; }
+.admin-badge {
+  background: rgba(124,92,252,0.15); border: 1px solid rgba(124,92,252,0.3);
+  color: var(--accent2); font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 1.5px; text-transform: uppercase;
+  padding: 4px 12px; border-radius: 50px;
+}
+.logout-btn {
+  background: rgba(255,255,255,0.05); border: 1px solid var(--border);
+  color: var(--text2); padding: 7px 16px; border-radius: 50px;
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.78rem;
+  cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+}
+.logout-btn:hover { border-color: var(--red); color: var(--red); background: rgba(239,68,68,0.06); }
+
+/* ─── MAIN CONTENT ─── */
+.main-content { padding: 24px; max-width: 1100px; margin: 0 auto; }
+
+/* ─── SECTION HEADERS ─── */
+.section-head {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 18px; margin-top: 32px;
+}
+.section-head:first-child { margin-top: 0; }
+.section-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px; }
+.section-head .count-badge {
+  background: rgba(124,92,252,0.15); border: 1px solid rgba(124,92,252,0.25);
+  color: var(--accent2); font-size: 0.7rem; font-weight: 700;
+  padding: 3px 10px; border-radius: 50px;
+}
+
+/* ─── CARDS / PANELS ─── */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.panel-header {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.02);
+  display: flex; align-items: center; gap: 10px;
+}
+.panel-icon { font-size: 1.2rem; }
+.panel-title { font-weight: 700; font-size: 0.95rem; }
+.panel-sub { color: var(--text2); font-size: 0.78rem; margin-top: 1px; }
+
+/* ─── OPEN/CLOSED CONTROL ─── */
+.status-control {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
+  padding: 20px;
+}
+.status-btn {
+  padding: 20px 16px; border-radius: var(--radius-sm);
+  border: 2px solid; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 1rem;
+  transition: all 0.22s cubic-bezier(0.2,0,0,1);
+  text-align: center; line-height: 1.2;
+}
+.status-btn.open {
+  background: rgba(34,197,94,0.07); border-color: rgba(34,197,94,0.25);
+  color: var(--green);
+}
+.status-btn.open.active, .status-btn.open:hover {
+  background: rgba(34,197,94,0.16); border-color: var(--green);
+  box-shadow: 0 0 28px rgba(34,197,94,0.2);
+}
+.status-btn.closed {
+  background: rgba(239,68,68,0.07); border-color: rgba(239,68,68,0.25);
+  color: var(--red);
+}
+.status-btn.closed.active, .status-btn.closed:hover {
+  background: rgba(239,68,68,0.16); border-color: var(--red);
+  box-shadow: 0 0 28px rgba(239,68,68,0.2);
+}
+.status-btn .status-emoji { font-size: 2rem; }
+.status-btn small { font-size: 0.72rem; font-weight: 400; opacity: 0.7; }
+.status-btn.active::after { content: '✓ Active'; font-size: 0.7rem; font-weight: 700; opacity: 0.7; }
+
+/* ─── HOURS GRID ─── */
+.hours-grid {
+  display: grid; gap: 12px; padding: 20px;
+}
+.hours-row {
+  display: grid; grid-template-columns: 140px 1fr 1fr;
+  gap: 10px; align-items: center;
+}
+.hours-day-label {
+  font-weight: 600; font-size: 0.85rem; color: var(--text2);
+  display: flex; align-items: center; gap: 8px;
+}
+.hours-day-label .day-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+  background: var(--green);
+}
+.hours-day-label.closed-day .day-dot { background: var(--red); }
+.hours-day-label.closed-day { color: rgba(158,154,147,0.5); }
+.time-input {
+  background: var(--bg3);
+  border: 1.5px solid var(--border); border-radius: 8px;
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+  padding: 9px 12px; outline: none; width: 100%;
+  transition: border-color 0.2s;
+}
+.time-input:focus { border-color: var(--accent); }
+.time-input:disabled { opacity: 0.35; cursor: not-allowed; }
+.closed-toggle {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.78rem; color: var(--text2); cursor: pointer; user-select: none;
+}
+.hours-legend {
+  display: flex; gap: 16px; padding: 0 20px 16px;
+  font-size: 0.75rem; color: var(--text2);
+}
+.hours-legend span { display: flex; align-items: center; gap: 5px; }
+
+/* ─── SAVE BUTTON ─── */
+.save-btn {
+  background: var(--accent); color: #fff; border: none;
+  padding: 11px 28px; border-radius: 50px;
+  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.88rem;
+  cursor: pointer; display: flex; align-items: center; gap: 7px;
+  transition: all 0.2s; letter-spacing: 0.3px;
+  box-shadow: 0 4px 16px rgba(124,92,252,0.3);
+}
+.save-btn:hover { background: var(--accent2); transform: scale(1.03); }
+.save-btn.saved { background: #1a3a1a; color: var(--green); box-shadow: none; }
+.panel-footer {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(255,255,255,0.015);
+}
+.last-saved { font-size: 0.75rem; color: var(--text2); }
+
+/* ─── PRODUCTS TABLE ─── */
+.product-row {
+  display: grid; align-items: center;
+  padding: 10px 20px; gap: 12px;
+  grid-template-columns: 1fr 90px 120px 110px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  transition: background 0.15s;
+}
+.product-row:last-child { border-bottom: none; }
+.product-row:hover { background: rgba(255,255,255,0.02); }
+.product-row.header {
+  background: rgba(255,255,255,0.025);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 20px;
+}
+.product-row.header span { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text2); }
+.product-name-input {
+  background: transparent; border: 1px solid transparent;
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+  font-weight: 600; padding: 5px 8px; border-radius: 6px;
+  outline: none; width: 100%; transition: all 0.18s;
+}
+.product-name-input:hover { border-color: var(--border); }
+.product-name-input:focus { border-color: var(--accent); background: var(--bg3); }
+.price-input {
+  background: var(--bg3); border: 1.5px solid var(--border);
+  color: var(--gold); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+  font-weight: 700; padding: 7px 10px; border-radius: 8px;
+  outline: none; width: 100%; text-align: center;
+  transition: border-color 0.2s;
+}
+.price-input:focus { border-color: var(--gold); }
+.availability-select {
+  background: var(--bg3); border: 1.5px solid var(--border);
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
+  padding: 7px 10px; border-radius: 8px; outline: none; width: 100%;
+  cursor: pointer; transition: border-color 0.2s;
+  appearance: none; -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239e9a93' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center;
+  padding-right: 28px;
+}
+.availability-select.available { color: var(--green); border-color: rgba(34,197,94,0.25); }
+.availability-select.unavailable { color: var(--red); border-color: rgba(239,68,68,0.25); }
+.product-cat-badge {
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px;
+  padding: 2px 8px; border-radius: 50px;
+  background: rgba(124,92,252,0.1); color: var(--accent2);
+  border: 1px solid rgba(124,92,252,0.15); white-space: nowrap;
+  display: inline-block; margin-top: 2px;
+}
+.product-name-cell { display: flex; flex-direction: column; gap: 2px; }
+
+/* ─── OFFERS ─── */
+.offers-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+.offer-row {
+  display: grid; grid-template-columns: 1fr 120px auto;
+  gap: 10px; align-items: center;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); padding: 12px 14px;
+  transition: border-color 0.2s;
+}
+.offer-row:hover { border-color: rgba(255,255,255,0.12); }
+.offer-input {
+  background: transparent; border: none;
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
+  outline: none; width: 100%; padding: 4px 0;
+}
+.offer-price-input {
+  background: var(--bg); border: 1.5px solid var(--border);
+  color: var(--gold); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+  font-weight: 700; padding: 7px 10px; border-radius: 8px;
+  outline: none; width: 100%; text-align: center;
+}
+.remove-offer-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
+  color: var(--red); cursor: pointer; font-size: 0.9rem;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.18s; flex-shrink: 0;
+}
+.remove-offer-btn:hover { background: rgba(239,68,68,0.22); }
+.add-offer-btn {
+  background: rgba(34,197,94,0.1); border: 1.5px dashed rgba(34,197,94,0.3);
+  color: var(--green); border-radius: var(--radius-sm);
+  padding: 13px; width: 100%; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem;
+  display: flex; align-items: center; justify-content: center; gap: 7px;
+  transition: all 0.2s;
+}
+.add-offer-btn:hover { background: rgba(34,197,94,0.18); border-color: var(--green); }
+
+/* ─── TOAST ─── */
+.toast {
+  position: fixed; bottom: 24px; left: 50%;
+  transform: translateX(-50%) translateY(70px);
+  background: var(--card); border: 1px solid rgba(34,197,94,0.3);
+  color: var(--green); padding: 11px 22px; border-radius: 50px;
+  font-weight: 600; font-size: 0.85rem; z-index: 3000;
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  white-space: nowrap; display: flex; align-items: center; gap: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+.toast.error { border-color: rgba(239,68,68,0.3); color: var(--red); }
+
+/* ─── SYNC STATUS ─── */
+.sync-pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: 0.72rem; font-weight: 600; padding: 4px 12px;
+  border-radius: 50px; white-space: nowrap;
+}
+.sync-pill.ok { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: var(--green); }
+.sync-pill.loading { background: rgba(245,200,66,0.1); border: 1px solid rgba(245,200,66,0.25); color: var(--gold); }
+.sync-pill.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: var(--red); }
+.sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+/* ─── MOBILE ─── */
+@media (max-width: 600px) {
+  .main-content { padding: 16px; }
+  .product-row { grid-template-columns: 1fr 80px; }
+  .product-row > *:nth-child(3) { grid-column: 1; }
+  .product-row > *:nth-child(4) { grid-column: 2; grid-row: 2; }
+  .product-row.header { display: none; }
+  .status-control { grid-template-columns: 1fr 1fr; }
+  .hours-row { grid-template-columns: 110px 1fr 1fr; }
+  .offer-row { grid-template-columns: 1fr auto; }
+  .offer-price-input { display: none; }
+  .login-card { padding: 32px 24px; }
+}
+@media (max-width: 400px) {
+  .hours-row { grid-template-columns: 1fr; }
+  .hours-day-label { margin-bottom: -4px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════ LOGIN SCREEN ════════════ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Mega<span>Med</span></div>
+    <div class="login-subtitle">Admin Dashboard</div>
+    <input type="text" id="login-user" class="login-input" placeholder="Username" autocomplete="username">
+    <input type="password" id="login-pass" class="login-input" placeholder="Password" autocomplete="current-password">
+    <button class="login-btn" onclick="doLogin()">Login →</button>
+    <div class="login-error" id="login-error">Incorrect username or password</div>
+  </div>
+</div>
+
+<!-- ════════════ APP ════════════ -->
+<div id="app">
+  <div class="top-bar">
+    <div class="top-bar-logo">Mega<span>Med</span> Admin</div>
+    <div class="top-bar-right">
+      <span class="sync-pill ok" id="syncPill"><span class="sync-dot"></span> Connected</span>
+      <span class="admin-badge">Manager</span>
+      <button class="logout-btn" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="main-content">
+
+    <!-- 1. OPEN / CLOSED -->
+    <div class="section-head">
+      <div style="font-size:1.4rem">🟢</div>
+      <div>
+        <h2>Restaurant Status</h2>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-icon">🔛</span>
+        <div>
+          <div class="panel-title">Manual Open / Closed Override</div>
+          <div class="panel-sub">This overrides the automatic schedule on the website</div>
+        </div>
+      </div>
+      <div class="status-control">
+        <button class="status-btn open" id="btnOpen" onclick="setStatus('open')">
+          <span class="status-emoji">🟢</span>
+          Open Now
+          <small>Customers can order</small>
+        </button>
+        <button class="status-btn closed" id="btnClosed" onclick="setStatus('closed')">
+          <span class="status-emoji">🔴</span>
+          Closed
+          <small>Show "Fermé" message</small>
+        </button>
+      </div>
+      <div class="panel-footer">
+        <span class="last-saved" id="statusSavedText">Not saved yet</span>
+        <button class="save-btn" onclick="saveStatus()">💾 Save Status</button>
+      </div>
+    </div>
+
+    <!-- 2. HOURS -->
+    <div class="section-head">
+      <div style="font-size:1.4rem">🕐</div>
+      <h2>Opening Hours</h2>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-icon">📅</span>
+        <div>
+          <div class="panel-title">Weekly Schedule</div>
+          <div class="panel-sub">These hours appear live on your website</div>
+        </div>
+      </div>
+      <div class="hours-legend">
+        <span><span style="color:var(--green)">●</span> Open</span>
+        <span><span style="color:var(--red)">●</span> Closed</span>
+        <span style="margin-left:auto;color:var(--text2)">Leave "Open" blank to mark as closed</span>
+      </div>
+      <div class="hours-grid" id="hoursGrid"></div>
+      <div class="panel-footer">
+        <span class="last-saved" id="hoursSavedText">Not saved yet</span>
+        <button class="save-btn" onclick="saveHours()">💾 Save Hours</button>
+      </div>
+    </div>
+
+    <!-- 3. PRODUCTS -->
+    <div class="section-head">
+      <div style="font-size:1.4rem">🍕</div>
+      <h2>Products</h2>
+      <span class="count-badge" id="productCount">0 items</span>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-icon">✏️</span>
+        <div>
+          <div class="panel-title">Edit Names, Prices & Availability</div>
+          <div class="panel-sub">Changes update the website instantly after saving</div>
+        </div>
+      </div>
+      <div class="product-row header">
+        <span>Product Name</span>
+        <span>Price (DH)</span>
+        <span>Availability</span>
+        <span>Category</span>
+      </div>
+      <div id="productsContainer"></div>
+      <div class="panel-footer">
+        <span class="last-saved" id="productsSavedText">Not saved yet</span>
+        <button class="save-btn" onclick="saveProducts()">💾 Save All Products</button>
+      </div>
+    </div>
+
+    <!-- 4. OFFERS -->
+    <div class="section-head">
+      <div style="font-size:1.4rem">🎉</div>
+      <h2>Special Offers</h2>
+    </div>
+    <div class="panel">
+      <div class="panel-header">
+        <span class="panel-icon">🔥</span>
+        <div>
+          <div class="panel-title">Manage Promotional Offers</div>
+          <div class="panel-sub">These show on the website as highlighted deals</div>
+        </div>
+      </div>
+      <div class="offers-list" id="offersList"></div>
+      <div style="padding: 0 20px 16px;">
+        <button class="add-offer-btn" onclick="addOffer()">+ Add New Offer</button>
+      </div>
+      <div class="panel-footer">
+        <span class="last-saved" id="offersSavedText">Not saved yet</span>
+        <button class="save-btn" onclick="saveOffers()">💾 Save Offers</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<!-- ════════════ FIREBASE SDK ════════════ -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+// ══════════════════════════════════════════
+// ⚙️  STEP 1: PASTE YOUR FIREBASE CONFIG HERE
+// Get this from Firebase Console → Project Settings → Your Apps → Web
+// ══════════════════════════════════════════
+const firebaseConfig = {
+  apiKey: "PASTE_YOUR_API_KEY_HERE",
+  authDomain: "PASTE_YOUR_AUTH_DOMAIN_HERE",
+  databaseURL: "PASTE_YOUR_DATABASE_URL_HERE",
+  projectId: "PASTE_YOUR_PROJECT_ID_HERE",
+  storageBucket: "PASTE_YOUR_STORAGE_BUCKET_HERE",
+  messagingSenderId: "PASTE_YOUR_MESSAGING_SENDER_ID_HERE",
+  appId: "PASTE_YOUR_APP_ID_HERE"
+};
+
+// ══════════════════════════════════════════
+// ⚙️  STEP 2: SET YOUR ADMIN PASSWORD HERE
+// ══════════════════════════════════════════
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "megamed2025"; // ← Change this!
+
+let db, fbRef;
+
+// ─────────────────────────────────────────
+//  LOGIN
+// ─────────────────────────────────────────
+window.doLogin = function() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    sessionStorage.setItem('megamed_auth', '1');
+    initFirebase();
+  } else {
+    document.getElementById('login-error').classList.add('show');
+  }
+};
+
+window.doLogout = function() {
+  sessionStorage.removeItem('megamed_auth');
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+};
+
+// Auto-login if already authenticated this session
+if (sessionStorage.getItem('megamed_auth')) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  initFirebase();
+}
+
+// Enter key on login
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') window.doLogin();
+});
+
+// ─────────────────────────────────────────
+//  FIREBASE INIT
+// ─────────────────────────────────────────
+function initFirebase() {
+  try {
+    const app = initializeApp(firebaseConfig);
+    db = getDatabase(app);
+    fbRef = (path) => ref(db, path);
+    setSyncPill('ok', 'Connected');
+    loadAllData();
+  } catch(e) {
+    setSyncPill('error', 'Not connected');
+    showToast('⚠️ Firebase not configured yet — running in demo mode', true);
+    loadDemoData();
+  }
+}
+
+function setSyncPill(type, text) {
+  const p = document.getElementById('syncPill');
+  p.className = `sync-pill ${type}`;
+  p.innerHTML = `<span class="sync-dot"></span> ${text}`;
+}
+
+// ─────────────────────────────────────────
+//  DEFAULT DATA
+// ─────────────────────────────────────────
+const DEFAULT_HOURS = {
+  0: { open: '13:30', close: '23:40', closed: false },
+  1: { open: '13:30', close: '23:40', closed: false },
+  2: { open: '',      close: '',      closed: true  },
+  3: { open: '13:30', close: '23:40', closed: false },
+  4: { open: '13:30', close: '23:40', closed: false },
+  5: { open: '14:45', close: '23:40', closed: false },
+  6: { open: '13:30', close: '23:40', closed: false },
+};
+
+const DEFAULT_PRODUCTS = [
+  { id:1,  cat:'tacos',     name:'Tacos Poulet',               price:33, available:true },
+  { id:2,  cat:'tacos',     name:'Tacos Kefta',                price:42, available:true },
+  { id:3,  cat:'tacos',     name:'Tacos Kefta Poulet',         price:30, available:true },
+  { id:4,  cat:'tacos',     name:'Tacos Mix',                  price:35, available:true },
+  { id:5,  cat:'tacos',     name:'Tacos Nuggets',              price:37, available:true },
+  { id:6,  cat:'tacos',     name:'Tacos Cordon Bleu',          price:40, available:true },
+  { id:9,  cat:'sandwich',  name:'Sandwich Poulet',            price:25, available:true },
+  { id:10, cat:'sandwich',  name:'Sandwich Thon',              price:20, available:true },
+  { id:11, cat:'sandwich',  name:'Sandwich Kefta',             price:30, available:true },
+  { id:12, cat:'sandwich',  name:'Sandwich Mix',               price:22, available:true },
+  { id:13, cat:'sandwich',  name:'Sandwich Kefta Poulet',      price:28, available:true },
+  { id:14, cat:'sandwich',  name:'Sandwich Mega Crispy',       price:35, available:true },
+  { id:15, cat:'panini',    name:'Panini Thon',                price:18, available:true },
+  { id:16, cat:'panini',    name:'Panini Poulet',              price:22, available:true },
+  { id:17, cat:'panini',    name:'Panini Kefta',               price:28, available:true },
+  { id:18, cat:'panini',    name:'Panini Kefta Poulet',        price:28, available:true },
+  { id:19, cat:'panini',    name:'Panini Mix',                 price:22, available:true },
+  { id:20, cat:'pizza',     name:'Pizza Poulet (Small)',       price:30, available:true },
+  { id:21, cat:'pizza',     name:'Pizza Poulet (Medium)',      price:40, available:true },
+  { id:22, cat:'pizza',     name:'Pizza Thon (Small)',         price:30, available:true },
+  { id:23, cat:'pizza',     name:'Pizza Thon (Medium)',        price:40, available:true },
+  { id:24, cat:'pizza',     name:'Pizza Kefta (Small)',        price:38, available:true },
+  { id:25, cat:'pizza',     name:'Pizza Kefta (Medium)',       price:48, available:true },
+  { id:26, cat:'pizza',     name:'Pizza Mix (Small)',          price:33, available:true },
+  { id:27, cat:'pizza',     name:'Pizza Mix (Medium)',         price:43, available:true },
+  { id:28, cat:'pizza',     name:'Pizza Kefta Poulet (Small)', price:28, available:true },
+  { id:29, cat:'pizza',     name:'Pizza Kefta Poulet (Medium)',price:38, available:true },
+  { id:30, cat:'pizza',     name:'Margherita (Small)',         price:22, available:true },
+  { id:31, cat:'pizza',     name:'Margherita (Medium)',        price:32, available:true },
+  { id:32, cat:'pizza',     name:'2 Margherita Offer 🎉',      price:30, available:true },
+  { id:33, cat:'pizza',     name:'Pizza 4 Fromage (Small)',    price:33, available:true },
+  { id:34, cat:'pizza',     name:'Pizza 4 Fromage (Medium)',   price:43, available:true },
+  { id:35, cat:'pizza',     name:'Pizza Fruit de Mer (Small)', price:40, available:true },
+  { id:36, cat:'pizza',     name:'Pizza Fruit de Mer (Medium)',price:50, available:true },
+  { id:37, cat:'pizza',     name:'Pizza 4 Seasons (Small)',    price:40, available:true },
+  { id:38, cat:'pizza',     name:'Pizza 4 Seasons (Medium)',   price:50, available:true },
+  { id:39, cat:'burger',    name:'Double Kefta Burger',        price:45, available:true },
+  { id:40, cat:'burger',    name:'Crispy Burger',              price:40, available:true },
+  { id:41, cat:'burger',    name:'Simple Kefta Burger',        price:38, available:true },
+  { id:42, cat:'pasticcio', name:'Pasticcio Poulet',           price:35, available:true },
+  { id:43, cat:'pasticcio', name:'Pasticcio Kefta',            price:45, available:true },
+  { id:44, cat:'pasticcio', name:'Pasticcio Kefta Poulet',     price:33, available:true },
+  { id:45, cat:'pasticcio', name:'Pasticcio Mix',              price:40, available:true },
+  { id:46, cat:'pasticcio', name:'Pasticcio Jambon',           price:33, available:true },
+  { id:47, cat:'pasticcio', name:'Cordon Bleu Pasticcio',      price:40, available:true },
+  { id:48, cat:'pasticcio', name:'Nuggets Pasticcio',          price:38, available:true },
+];
+
+const DEFAULT_OFFERS = [
+  { id: Date.now(), text: '2 Margherita Pizzas Special Deal', price: 30 },
+];
+
+// ─────────────────────────────────────────
+//  STATE
+// ─────────────────────────────────────────
+let currentStatus = 'open';
+let currentHours  = JSON.parse(JSON.stringify(DEFAULT_HOURS));
+let currentProducts = DEFAULT_PRODUCTS.map(p => ({...p}));
+let currentOffers  = DEFAULT_OFFERS.map(o => ({...o}));
+
+// ─────────────────────────────────────────
+//  LOAD DATA
+// ─────────────────────────────────────────
+async function loadAllData() {
+  try {
+    const snap = await get(fbRef('megamed'));
+    const data  = snap.val() || {};
+    currentStatus   = data.status   || 'open';
+    currentHours    = data.hours    || DEFAULT_HOURS;
+    currentProducts = data.products || DEFAULT_PRODUCTS;
+    currentOffers   = data.offers   || DEFAULT_OFFERS;
+  } catch(e) {
+    showToast('Could not load data from Firebase', true);
+  }
+  renderAll();
+}
+
+function loadDemoData() {
+  renderAll();
+}
+
+function renderAll() {
+  renderStatus();
+  renderHours();
+  renderProducts();
+  renderOffers();
+}
+
+// ─────────────────────────────────────────
+//  STATUS
+// ─────────────────────────────────────────
+function renderStatus() {
+  document.getElementById('btnOpen').classList.toggle('active', currentStatus === 'open');
+  document.getElementById('btnClosed').classList.toggle('active', currentStatus === 'closed');
+}
+
+window.setStatus = function(s) {
+  currentStatus = s;
+  renderStatus();
+};
+
+window.saveStatus = async function() {
+  await saveToFirebase('megamed/status', currentStatus);
+  document.getElementById('statusSavedText').textContent = 'Saved: ' + new Date().toLocaleTimeString();
+};
+
+// ─────────────────────────────────────────
+//  HOURS
+// ─────────────────────────────────────────
+const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+function renderHours() {
+  const grid = document.getElementById('hoursGrid');
+  grid.innerHTML = Object.entries(currentHours).map(([d, sch]) => {
+    const isClosed = sch.closed;
+    return `
+      <div class="hours-row">
+        <label class="hours-day-label ${isClosed ? 'closed-day' : ''}" id="day-label-${d}">
+          <span class="day-dot"></span> ${DAY_NAMES[d]}
+        </label>
+        <input type="time" class="time-input" id="open-${d}" value="${sch.open || ''}"
+          ${isClosed ? 'disabled' : ''} onchange="updateHour(${d},'open',this.value)">
+        <input type="time" class="time-input" id="close-${d}" value="${sch.close || ''}"
+          ${isClosed ? 'disabled' : ''} onchange="updateHour(${d},'close',this.value)">
+      </div>
+      <div class="hours-row" style="margin-top:-6px;margin-bottom:4px;">
+        <span></span>
+        <label class="closed-toggle" style="grid-column:span 2;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text2);padding-left:4px;">
+          <input type="checkbox" id="closed-${d}" ${isClosed ? 'checked' : ''}
+            onchange="toggleDayClosed(${d},this.checked)" style="accent-color:var(--red);width:14px;height:14px;">
+          Mark as closed (day off)
+        </label>
+      </div>
+    `;
+  }).join('');
+}
+
+window.updateHour = function(day, field, val) {
+  currentHours[day][field] = val;
+};
+
+window.toggleDayClosed = function(day, closed) {
+  currentHours[day].closed = closed;
+  document.getElementById(`open-${day}`).disabled  = closed;
+  document.getElementById(`close-${day}`).disabled = closed;
+  const label = document.getElementById(`day-label-${day}`);
+  label.classList.toggle('closed-day', closed);
+};
+
+window.saveHours = async function() {
+  await saveToFirebase('megamed/hours', currentHours);
+  document.getElementById('hoursSavedText').textContent = 'Saved: ' + new Date().toLocaleTimeString();
+};
+
+// ─────────────────────────────────────────
+//  PRODUCTS
+// ─────────────────────────────────────────
+function renderProducts() {
+  const cont = document.getElementById('productsContainer');
+  document.getElementById('productCount').textContent = currentProducts.length + ' items';
+  cont.innerHTML = currentProducts.map((item, idx) => `
+    <div class="product-row">
+      <div class="product-name-cell">
+        <input type="text" class="product-name-input" value="${escHtml(item.name)}"
+          onchange="updateProduct(${idx},'name',this.value)" placeholder="Product name">
+        <span class="product-cat-badge">${item.cat}</span>
+      </div>
+      <input type="number" class="price-input" value="${item.price}" min="1" max="999"
+        onchange="updateProduct(${idx},'price',Number(this.value))">
+      <select class="availability-select ${item.available ? 'available' : 'unavailable'}"
+        onchange="updateProduct(${idx},'available',this.value==='true');this.className='availability-select '+(this.value==='true'?'available':'unavailable')">
+        <option value="true"  ${item.available ? 'selected' : ''}>✅ Available</option>
+        <option value="false" ${!item.available ? 'selected' : ''}>❌ Non disponible</option>
+      </select>
+      <span class="product-cat-badge" style="text-align:center">${item.cat}</span>
+    </div>
+  `).join('');
+}
+
+window.updateProduct = function(idx, field, val) {
+  currentProducts[idx][field] = val;
+};
+
+window.saveProducts = async function() {
+  await saveToFirebase('megamed/products', currentProducts);
+  document.getElementById('productsSavedText').textContent = 'Saved: ' + new Date().toLocaleTimeString();
+  renderProducts();
+};
+
+// ─────────────────────────────────────────
+//  OFFERS
+// ─────────────────────────────────────────
+function renderOffers() {
+  const list = document.getElementById('offersList');
+  if (!currentOffers.length) {
+    list.innerHTML = `<p style="color:var(--text2);font-size:0.82rem;text-align:center;padding:12px 0;">No offers yet. Click "Add New Offer" below.</p>`;
+    return;
+  }
+  list.innerHTML = currentOffers.map((offer, idx) => `
+    <div class="offer-row">
+      <input type="text" class="offer-input" value="${escHtml(offer.text)}"
+        onchange="updateOffer(${idx},'text',this.value)" placeholder="Offer description...">
+      <input type="number" class="offer-price-input" value="${offer.price}" min="0"
+        onchange="updateOffer(${idx},'price',Number(this.value))" placeholder="Price DH">
+      <button class="remove-offer-btn" onclick="removeOffer(${idx})">✕</button>
+    </div>
+  `).join('');
+}
+
+window.addOffer = function() {
+  currentOffers.push({ id: Date.now(), text: 'New offer — click to edit', price: 0 });
+  renderOffers();
+};
+
+window.removeOffer = function(idx) {
+  currentOffers.splice(idx, 1);
+  renderOffers();
+};
+
+window.updateOffer = function(idx, field, val) {
+  currentOffers[idx][field] = val;
+};
+
+window.saveOffers = async function() {
+  await saveToFirebase('megamed/offers', currentOffers);
+  document.getElementById('offersSavedText').textContent = 'Saved: ' + new Date().toLocaleTimeString();
+};
+
+// ─────────────────────────────────────────
+//  FIREBASE WRITE
+// ─────────────────────────────────────────
+async function saveToFirebase(path, data) {
+  if (!db) { showToast('✅ Saved locally (Firebase not connected)'); return; }
+  try {
+    setSyncPill('loading', 'Saving…');
+    await set(fbRef(path), data);
+    setSyncPill('ok', 'Connected');
+    showToast('✅ Saved successfully!');
+  } catch(e) {
+    setSyncPill('error', 'Save failed');
+    showToast('❌ Could not save: ' + e.message, true);
+  }
+}
+
+// ─────────────────────────────────────────
+//  TOAST & UTILS
+// ─────────────────────────────────────────
+let toastTimer;
+window.showToast = function(msg, isError = false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+};
+
+function escHtml(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+</body>
+</html>
