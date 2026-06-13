@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>MegaMed Admin Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -25,7 +25,7 @@
   --radius-sm: 10px;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
 body {
   background: var(--bg);
   color: var(--text);
@@ -33,20 +33,24 @@ body {
   font-size: 14px;
   line-height: 1.5;
   min-height: 100vh;
+  min-height: -webkit-fill-available;
+  overflow-x: hidden;
 }
 
 /* ─── LOGIN ─── */
 #login-screen {
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   display: flex; align-items: center; justify-content: center;
   background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(124,92,252,0.18) 0%, transparent 70%);
+  padding: 20px;
 }
 .login-card {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 48px 40px;
-  width: min(420px, 90vw);
+  width: min(420px, 100%);
   text-align: center;
   box-shadow: 0 24px 80px rgba(0,0,0,0.5);
 }
@@ -57,62 +61,72 @@ body {
   width: 100%; background: var(--bg3);
   border: 1.5px solid var(--border);
   border-radius: var(--radius-sm); color: var(--text);
-  font-family: 'DM Sans', sans-serif; font-size: 0.92rem;
-  padding: 13px 16px; margin-bottom: 14px;
+  font-family: 'DM Sans', sans-serif; font-size: 1rem;
+  padding: 14px 16px; margin-bottom: 14px;
   transition: border-color 0.2s;
   outline: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 .login-input:focus { border-color: var(--accent); }
 .login-btn {
   width: 100%; background: var(--accent); color: #fff;
   border: none; border-radius: var(--radius-sm);
   font-family: 'DM Sans', sans-serif; font-weight: 700;
-  font-size: 0.95rem; padding: 14px;
+  font-size: 1rem; padding: 16px;
   cursor: pointer; transition: background 0.2s, transform 0.15s;
   margin-top: 6px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
-.login-btn:hover { background: var(--accent2); transform: scale(1.02); }
+.login-btn:hover { background: var(--accent2); }
+.login-btn:active { transform: scale(0.98); }
 .login-error {
-  color: var(--red); font-size: 0.8rem;
-  margin-top: 10px; display: none;
+  color: var(--red); font-size: 0.82rem;
+  margin-top: 12px; display: none;
   background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
-  border-radius: 8px; padding: 8px 12px;
+  border-radius: 8px; padding: 10px 14px;
 }
 .login-error.show { display: block; }
 
 /* ─── APP LAYOUT ─── */
 #app { display: none; min-height: 100vh; }
+
 .top-bar {
   position: sticky; top: 0; z-index: 100;
-  background: rgba(12,12,15,0.92); backdrop-filter: blur(20px);
+  background: rgba(12,12,15,0.95); backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
-  padding: 0 24px; height: 60px;
+  padding: 0 20px; height: 60px;
   display: flex; align-items: center; justify-content: space-between;
 }
 .top-bar-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px; }
 .top-bar-logo span { color: var(--orange); }
-.top-bar-right { display: flex; align-items: center; gap: 14px; }
+.top-bar-right { display: flex; align-items: center; gap: 10px; }
 .admin-badge {
   background: rgba(124,92,252,0.15); border: 1px solid rgba(124,92,252,0.3);
-  color: var(--accent2); font-size: 0.7rem; font-weight: 700;
+  color: var(--accent2); font-size: 0.68rem; font-weight: 700;
   letter-spacing: 1.5px; text-transform: uppercase;
-  padding: 4px 12px; border-radius: 50px;
+  padding: 4px 10px; border-radius: 50px;
 }
 .logout-btn {
   background: rgba(255,255,255,0.05); border: 1px solid var(--border);
-  color: var(--text2); padding: 7px 16px; border-radius: 50px;
+  color: var(--text2); padding: 8px 16px; border-radius: 50px;
   font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.78rem;
   cursor: pointer; transition: all 0.2s; letter-spacing: 0.5px;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 .logout-btn:hover { border-color: var(--red); color: var(--red); background: rgba(239,68,68,0.06); }
+.logout-btn:active { opacity: 0.7; }
 
 /* ─── MAIN CONTENT ─── */
-.main-content { padding: 24px; max-width: 1100px; margin: 0 auto; }
+.main-content { padding: 20px; max-width: 1100px; margin: 0 auto; }
 
 /* ─── SECTION HEADERS ─── */
 .section-head {
   display: flex; align-items: center; gap: 12px;
-  margin-bottom: 18px; margin-top: 32px;
+  margin-bottom: 14px; margin-top: 28px;
 }
 .section-head:first-child { margin-top: 0; }
 .section-head h2 { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 2px; }
@@ -122,37 +136,40 @@ body {
   padding: 3px 10px; border-radius: 50px;
 }
 
-/* ─── CARDS / PANELS ─── */
+/* ─── PANELS ─── */
 .panel {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 .panel-header {
-  padding: 18px 20px;
+  padding: 16px 18px;
   border-bottom: 1px solid var(--border);
   background: rgba(255,255,255,0.02);
   display: flex; align-items: center; gap: 10px;
 }
-.panel-icon { font-size: 1.2rem; }
+.panel-icon { font-size: 1.2rem; flex-shrink: 0; }
 .panel-title { font-weight: 700; font-size: 0.95rem; }
-.panel-sub { color: var(--text2); font-size: 0.78rem; margin-top: 1px; }
+.panel-sub { color: var(--text2); font-size: 0.75rem; margin-top: 2px; }
 
 /* ─── OPEN/CLOSED CONTROL ─── */
 .status-control {
   display: grid; grid-template-columns: 1fr 1fr; gap: 14px;
-  padding: 20px;
+  padding: 18px;
 }
 .status-btn {
-  padding: 20px 16px; border-radius: var(--radius-sm);
+  padding: 20px 12px; border-radius: var(--radius-sm);
   border: 2px solid; cursor: pointer;
   display: flex; flex-direction: column; align-items: center; gap: 8px;
-  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 1rem;
+  font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.95rem;
   transition: all 0.22s cubic-bezier(0.2,0,0,1);
   text-align: center; line-height: 1.2;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
+.status-btn:active { transform: scale(0.97); }
 .status-btn.open {
   background: rgba(34,197,94,0.07); border-color: rgba(34,197,94,0.25);
   color: var(--green);
@@ -169,16 +186,14 @@ body {
   background: rgba(239,68,68,0.16); border-color: var(--red);
   box-shadow: 0 0 28px rgba(239,68,68,0.2);
 }
-.status-btn .status-emoji { font-size: 2rem; }
-.status-btn small { font-size: 0.72rem; font-weight: 400; opacity: 0.7; }
-.status-btn.active::after { content: '✓ Active'; font-size: 0.7rem; font-weight: 700; opacity: 0.7; }
+.status-btn .status-emoji { font-size: 1.8rem; }
+.status-btn small { font-size: 0.7rem; font-weight: 400; opacity: 0.7; }
+.status-btn.active::after { content: '✓ Active'; font-size: 0.68rem; font-weight: 700; opacity: 0.7; }
 
-/* ─── HOURS GRID ─── */
-.hours-grid {
-  display: grid; gap: 12px; padding: 20px;
-}
+/* ─── HOURS ─── */
+.hours-grid { display: grid; gap: 10px; padding: 16px 18px; }
 .hours-row {
-  display: grid; grid-template-columns: 140px 1fr 1fr;
+  display: grid; grid-template-columns: 130px 1fr 1fr;
   gap: 10px; align-items: center;
 }
 .hours-day-label {
@@ -194,46 +209,54 @@ body {
 .time-input {
   background: var(--bg3);
   border: 1.5px solid var(--border); border-radius: 8px;
-  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
-  padding: 9px 12px; outline: none; width: 100%;
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
+  padding: 10px 12px; outline: none; width: 100%;
   transition: border-color 0.2s;
+  -webkit-appearance: none;
+  appearance: none;
 }
 .time-input:focus { border-color: var(--accent); }
 .time-input:disabled { opacity: 0.35; cursor: not-allowed; }
 .closed-toggle {
   display: flex; align-items: center; gap: 8px;
   font-size: 0.78rem; color: var(--text2); cursor: pointer; user-select: none;
+  padding: 4px 0;
 }
 .hours-legend {
-  display: flex; gap: 16px; padding: 0 20px 16px;
-  font-size: 0.75rem; color: var(--text2);
+  display: flex; gap: 16px; padding: 0 18px 14px;
+  font-size: 0.75rem; color: var(--text2); flex-wrap: wrap;
 }
 .hours-legend span { display: flex; align-items: center; gap: 5px; }
 
 /* ─── SAVE BUTTON ─── */
 .save-btn {
   background: var(--accent); color: #fff; border: none;
-  padding: 11px 28px; border-radius: 50px;
+  padding: 12px 24px; border-radius: 50px;
   font-family: 'DM Sans', sans-serif; font-weight: 700; font-size: 0.88rem;
   cursor: pointer; display: flex; align-items: center; gap: 7px;
   transition: all 0.2s; letter-spacing: 0.3px;
   box-shadow: 0 4px 16px rgba(124,92,252,0.3);
+  white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
-.save-btn:hover { background: var(--accent2); transform: scale(1.03); }
+.save-btn:hover { background: var(--accent2); }
+.save-btn:active { transform: scale(0.97); }
 .save-btn.saved { background: #1a3a1a; color: var(--green); box-shadow: none; }
 .panel-footer {
-  padding: 16px 20px;
+  padding: 14px 18px;
   border-top: 1px solid var(--border);
-  display: flex; align-items: center; justify-content: space-between;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
   background: rgba(255,255,255,0.015);
+  flex-wrap: wrap;
 }
-.last-saved { font-size: 0.75rem; color: var(--text2); }
+.last-saved { font-size: 0.73rem; color: var(--text2); }
 
-/* ─── PRODUCTS TABLE ─── */
+/* ─── PRODUCTS ─── */
 .product-row {
   display: grid; align-items: center;
-  padding: 10px 20px; gap: 12px;
-  grid-template-columns: 1fr 90px 120px 110px;
+  padding: 10px 18px; gap: 10px;
+  grid-template-columns: 1fr 80px 130px 90px;
   border-bottom: 1px solid rgba(255,255,255,0.04);
   transition: background 0.15s;
 }
@@ -242,50 +265,53 @@ body {
 .product-row.header {
   background: rgba(255,255,255,0.025);
   border-bottom: 1px solid var(--border);
-  padding: 10px 20px;
+  padding: 10px 18px;
 }
 .product-row.header span { font-size: 0.7rem; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text2); }
 .product-name-input {
   background: transparent; border: 1px solid transparent;
   color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
-  font-weight: 600; padding: 5px 8px; border-radius: 6px;
+  font-weight: 600; padding: 6px 8px; border-radius: 6px;
   outline: none; width: 100%; transition: all 0.18s;
+  -webkit-appearance: none;
 }
 .product-name-input:hover { border-color: var(--border); }
 .product-name-input:focus { border-color: var(--accent); background: var(--bg3); }
 .price-input {
   background: var(--bg3); border: 1.5px solid var(--border);
   color: var(--gold); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
-  font-weight: 700; padding: 7px 10px; border-radius: 8px;
+  font-weight: 700; padding: 8px 6px; border-radius: 8px;
   outline: none; width: 100%; text-align: center;
   transition: border-color 0.2s;
+  -webkit-appearance: none;
 }
 .price-input:focus { border-color: var(--gold); }
 .availability-select {
   background: var(--bg3); border: 1.5px solid var(--border);
-  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.8rem;
-  padding: 7px 10px; border-radius: 8px; outline: none; width: 100%;
+  color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.78rem;
+  padding: 8px 8px; border-radius: 8px; outline: none; width: 100%;
   cursor: pointer; transition: border-color 0.2s;
-  appearance: none; -webkit-appearance: none;
+  -webkit-appearance: none;
+  appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%239e9a93' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-  background-repeat: no-repeat; background-position: right 10px center;
-  padding-right: 28px;
+  background-repeat: no-repeat; background-position: right 8px center;
+  padding-right: 24px;
 }
 .availability-select.available { color: var(--green); border-color: rgba(34,197,94,0.25); }
 .availability-select.unavailable { color: var(--red); border-color: rgba(239,68,68,0.25); }
 .product-cat-badge {
-  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px;
-  padding: 2px 8px; border-radius: 50px;
+  font-size: 0.62rem; font-weight: 600; letter-spacing: 0.5px;
+  padding: 2px 7px; border-radius: 50px;
   background: rgba(124,92,252,0.1); color: var(--accent2);
   border: 1px solid rgba(124,92,252,0.15); white-space: nowrap;
   display: inline-block; margin-top: 2px;
 }
-.product-name-cell { display: flex; flex-direction: column; gap: 2px; }
+.product-name-cell { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 
 /* ─── OFFERS ─── */
-.offers-list { padding: 16px 20px; display: flex; flex-direction: column; gap: 10px; }
+.offers-list { padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
 .offer-row {
-  display: grid; grid-template-columns: 1fr 120px auto;
+  display: grid; grid-template-columns: 1fr 110px auto;
   gap: 10px; align-items: center;
   background: var(--bg3); border: 1px solid var(--border);
   border-radius: var(--radius-sm); padding: 12px 14px;
@@ -296,41 +322,50 @@ body {
   background: transparent; border: none;
   color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.88rem;
   outline: none; width: 100%; padding: 4px 0;
+  min-width: 0;
 }
 .offer-price-input {
   background: var(--bg); border: 1.5px solid var(--border);
   color: var(--gold); font-family: 'DM Sans', sans-serif; font-size: 0.9rem;
-  font-weight: 700; padding: 7px 10px; border-radius: 8px;
+  font-weight: 700; padding: 7px 8px; border-radius: 8px;
   outline: none; width: 100%; text-align: center;
+  -webkit-appearance: none;
 }
 .remove-offer-btn {
-  width: 32px; height: 32px; border-radius: 50%;
+  width: 34px; height: 34px; border-radius: 50%;
   background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.2);
   color: var(--red); cursor: pointer; font-size: 0.9rem;
   display: flex; align-items: center; justify-content: center;
   transition: all 0.18s; flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 .remove-offer-btn:hover { background: rgba(239,68,68,0.22); }
+.remove-offer-btn:active { transform: scale(0.92); }
 .add-offer-btn {
   background: rgba(34,197,94,0.1); border: 1.5px dashed rgba(34,197,94,0.3);
   color: var(--green); border-radius: var(--radius-sm);
-  padding: 13px; width: 100%; cursor: pointer;
-  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.85rem;
+  padding: 14px; width: 100%; cursor: pointer;
+  font-family: 'DM Sans', sans-serif; font-weight: 600; font-size: 0.88rem;
   display: flex; align-items: center; justify-content: center; gap: 7px;
   transition: all 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
 }
 .add-offer-btn:hover { background: rgba(34,197,94,0.18); border-color: var(--green); }
+.add-offer-btn:active { transform: scale(0.98); }
 
 /* ─── TOAST ─── */
 .toast {
   position: fixed; bottom: 24px; left: 50%;
-  transform: translateX(-50%) translateY(70px);
+  transform: translateX(-50%) translateY(90px);
   background: var(--card); border: 1px solid rgba(34,197,94,0.3);
-  color: var(--green); padding: 11px 22px; border-radius: 50px;
-  font-weight: 600; font-size: 0.85rem; z-index: 3000;
+  color: var(--green); padding: 13px 24px; border-radius: 50px;
+  font-weight: 600; font-size: 0.88rem; z-index: 3000;
   transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
   white-space: nowrap; display: flex; align-items: center; gap: 8px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  max-width: calc(100vw - 40px);
 }
 .toast.show { transform: translateX(-50%) translateY(0); }
 .toast.error { border-color: rgba(239,68,68,0.3); color: var(--red); }
@@ -338,7 +373,7 @@ body {
 /* ─── SYNC STATUS ─── */
 .sync-pill {
   display: inline-flex; align-items: center; gap: 6px;
-  font-size: 0.72rem; font-weight: 600; padding: 4px 12px;
+  font-size: 0.7rem; font-weight: 600; padding: 4px 10px;
   border-radius: 50px; white-space: nowrap;
 }
 .sync-pill.ok { background: rgba(34,197,94,0.1); border: 1px solid rgba(34,197,94,0.25); color: var(--green); }
@@ -346,23 +381,92 @@ body {
 .sync-pill.error { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.25); color: var(--red); }
 .sync-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 
-/* ─── MOBILE ─── */
-@media (max-width: 600px) {
+/* ════════════════════════════════
+   TABLET (max 768px)
+════════════════════════════════ */
+@media (max-width: 768px) {
   .main-content { padding: 16px; }
-  .product-row { grid-template-columns: 1fr 80px; }
-  .product-row > *:nth-child(3) { grid-column: 1; }
-  .product-row > *:nth-child(4) { grid-column: 2; grid-row: 2; }
+  .top-bar { padding: 0 16px; }
+  .admin-badge { display: none; }
+
+  .hours-row { grid-template-columns: 100px 1fr 1fr; gap: 8px; }
+
+  .product-row {
+    grid-template-columns: 1fr 72px;
+    grid-template-rows: auto auto;
+    gap: 8px;
+    padding: 12px 16px;
+  }
+  .product-row > *:nth-child(1) { grid-column: 1; grid-row: 1; }
+  .product-row > *:nth-child(2) { grid-column: 2; grid-row: 1; }
+  .product-row > *:nth-child(3) { grid-column: 1; grid-row: 2; }
+  .product-row > *:nth-child(4) { grid-column: 2; grid-row: 2; text-align: center; }
   .product-row.header { display: none; }
-  .status-control { grid-template-columns: 1fr 1fr; }
-  .hours-row { grid-template-columns: 110px 1fr 1fr; }
-  .offer-row { grid-template-columns: 1fr auto; }
+}
+
+/* ════════════════════════════════
+   MOBILE (max 480px)
+════════════════════════════════ */
+@media (max-width: 480px) {
+  .login-card { padding: 32px 22px; }
+  .main-content { padding: 12px; }
+  .top-bar { height: 56px; }
+  .top-bar-logo { font-size: 1.3rem; }
+  .sync-pill { font-size: 0.65rem; padding: 3px 8px; }
+  .logout-btn { padding: 7px 12px; font-size: 0.75rem; }
+
+  .section-head { margin-top: 22px; margin-bottom: 12px; }
+  .section-head h2 { font-size: 1.3rem; }
+
+  .panel-header { padding: 14px 16px; }
+  .panel-title { font-size: 0.88rem; }
+  .panel-sub { font-size: 0.72rem; }
+  .panel-footer { padding: 12px 14px; }
+
+  .status-control { gap: 10px; padding: 14px; }
+  .status-btn { padding: 16px 10px; font-size: 0.88rem; }
+  .status-btn .status-emoji { font-size: 1.6rem; }
+
+  .hours-grid { padding: 12px 14px; gap: 8px; }
+  .hours-row { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .hours-day-label {
+    grid-column: 1 / -1;
+    font-size: 0.88rem; color: var(--text);
+    padding-bottom: 2px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    margin-bottom: 2px;
+  }
+  .hours-legend { padding: 0 14px 12px; font-size: 0.72rem; }
+
+  .product-row { padding: 10px 14px; gap: 8px; }
+  .product-name-input { font-size: 0.85rem; padding: 5px 6px; }
+  .price-input { font-size: 0.88rem; padding: 7px 4px; }
+  .availability-select { font-size: 0.75rem; padding: 7px 6px; padding-right: 22px; }
+
+  .offers-list { padding: 12px 14px; }
+  .offer-row { grid-template-columns: 1fr auto; gap: 8px; padding: 10px 12px; }
   .offer-price-input { display: none; }
-  .login-card { padding: 32px 24px; }
+  .offer-input { font-size: 0.85rem; }
+
+  .save-btn { padding: 11px 20px; font-size: 0.85rem; }
+
+  .toast { font-size: 0.82rem; padding: 11px 18px; }
 }
-@media (max-width: 400px) {
-  .hours-row { grid-template-columns: 1fr; }
-  .hours-day-label { margin-bottom: -4px; }
+
+/* ════════════════════════════════
+   VERY SMALL (max 360px)
+════════════════════════════════ */
+@media (max-width: 360px) {
+  .main-content { padding: 10px; }
+  .top-bar-logo { font-size: 1.1rem; }
+  .status-btn { padding: 14px 8px; font-size: 0.82rem; }
+  .hours-row { grid-template-columns: 1fr 1fr; }
 }
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(124,92,252,0.3); border-radius: 4px; }
 </style>
 </head>
 <body>
@@ -395,9 +499,7 @@ body {
     <!-- 1. OPEN / CLOSED -->
     <div class="section-head">
       <div style="font-size:1.4rem">🟢</div>
-      <div>
-        <h2>Restaurant Status</h2>
-      </div>
+      <h2>Restaurant Status</h2>
     </div>
     <div class="panel">
       <div class="panel-header">
@@ -441,7 +543,7 @@ body {
       <div class="hours-legend">
         <span><span style="color:var(--green)">●</span> Open</span>
         <span><span style="color:var(--red)">●</span> Closed</span>
-        <span style="margin-left:auto;color:var(--text2)">Leave "Open" blank to mark as closed</span>
+        <span style="margin-left:auto;color:var(--text2)">Leave blank to mark as closed</span>
       </div>
       <div class="hours-grid" id="hoursGrid"></div>
       <div class="panel-footer">
@@ -491,7 +593,7 @@ body {
         </div>
       </div>
       <div class="offers-list" id="offersList"></div>
-      <div style="padding: 0 20px 16px;">
+      <div style="padding: 0 18px 16px;">
         <button class="add-offer-btn" onclick="addOffer()">+ Add New Offer</button>
       </div>
       <div class="panel-footer">
@@ -504,15 +606,10 @@ body {
 </div>
 <div class="toast" id="toast"></div>
 
-<!-- ════════════ FIREBASE SDK ════════════ -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getDatabase, ref, set, get, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
 
-// ══════════════════════════════════════════
-// ⚙️  STEP 1: PASTE YOUR FIREBASE CONFIG HERE
-// Get this from Firebase Console → Project Settings → Your Apps → Web
-// ══════════════════════════════════════════
 const firebaseConfig = {
   apiKey: "AIzaSyDCEsEnWjc8h73d4TcT_pI1zdBMLE5kB4U",
   authDomain: "megamed-snack.firebaseapp.com",
@@ -523,17 +620,11 @@ const firebaseConfig = {
   appId: "1:630486671195:web:943b37c2ca22735d84047e"
 };
 
-// ══════════════════════════════════════════
-// ⚙️  STEP 2: SET YOUR ADMIN PASSWORD HERE
-// ══════════════════════════════════════════
 const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "123456789"; // ← Change this!
+const ADMIN_PASSWORD = "123456789";
 
 let db, fbRef;
 
-// ─────────────────────────────────────────
-//  LOGIN
-// ─────────────────────────────────────────
 window.doLogin = function() {
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pass').value;
@@ -553,21 +644,16 @@ window.doLogout = function() {
   document.getElementById('app').style.display = 'none';
 };
 
-// Auto-login if already authenticated this session
 if (sessionStorage.getItem('megamed_auth')) {
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app').style.display = 'block';
   initFirebase();
 }
 
-// Enter key on login
 document.getElementById('login-pass').addEventListener('keydown', e => {
   if (e.key === 'Enter') window.doLogin();
 });
 
-// ─────────────────────────────────────────
-//  FIREBASE INIT
-// ─────────────────────────────────────────
 function initFirebase() {
   try {
     const app = initializeApp(firebaseConfig);
@@ -588,9 +674,6 @@ function setSyncPill(type, text) {
   p.innerHTML = `<span class="sync-dot"></span> ${text}`;
 }
 
-// ─────────────────────────────────────────
-//  DEFAULT DATA
-// ─────────────────────────────────────────
 const DEFAULT_HOURS = {
   0: { open: '13:30', close: '23:40', closed: false },
   1: { open: '13:30', close: '23:40', closed: false },
@@ -654,17 +737,11 @@ const DEFAULT_OFFERS = [
   { id: Date.now(), text: '2 Margherita Pizzas Special Deal', price: 30 },
 ];
 
-// ─────────────────────────────────────────
-//  STATE
-// ─────────────────────────────────────────
-let currentStatus = 'open';
-let currentHours  = JSON.parse(JSON.stringify(DEFAULT_HOURS));
+let currentStatus   = 'open';
+let currentHours    = JSON.parse(JSON.stringify(DEFAULT_HOURS));
 let currentProducts = DEFAULT_PRODUCTS.map(p => ({...p}));
-let currentOffers  = DEFAULT_OFFERS.map(o => ({...o}));
+let currentOffers   = DEFAULT_OFFERS.map(o => ({...o}));
 
-// ─────────────────────────────────────────
-//  LOAD DATA
-// ─────────────────────────────────────────
 async function loadAllData() {
   try {
     const snap = await get(fbRef('megamed'));
@@ -679,9 +756,7 @@ async function loadAllData() {
   renderAll();
 }
 
-function loadDemoData() {
-  renderAll();
-}
+function loadDemoData() { renderAll(); }
 
 function renderAll() {
   renderStatus();
@@ -690,9 +765,6 @@ function renderAll() {
   renderOffers();
 }
 
-// ─────────────────────────────────────────
-//  STATUS
-// ─────────────────────────────────────────
 function renderStatus() {
   document.getElementById('btnOpen').classList.toggle('active', currentStatus === 'open');
   document.getElementById('btnClosed').classList.toggle('active', currentStatus === 'closed');
@@ -708,9 +780,6 @@ window.saveStatus = async function() {
   document.getElementById('statusSavedText').textContent = 'Saved: ' + new Date().toLocaleTimeString();
 };
 
-// ─────────────────────────────────────────
-//  HOURS
-// ─────────────────────────────────────────
 const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 
 function renderHours() {
@@ -727,11 +796,11 @@ function renderHours() {
         <input type="time" class="time-input" id="close-${d}" value="${sch.close || ''}"
           ${isClosed ? 'disabled' : ''} onchange="updateHour(${d},'close',this.value)">
       </div>
-      <div class="hours-row" style="margin-top:-6px;margin-bottom:4px;">
+      <div class="hours-row" style="margin-top:-4px;margin-bottom:6px;">
         <span></span>
         <label class="closed-toggle" style="grid-column:span 2;cursor:pointer;display:flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--text2);padding-left:4px;">
           <input type="checkbox" id="closed-${d}" ${isClosed ? 'checked' : ''}
-            onchange="toggleDayClosed(${d},this.checked)" style="accent-color:var(--red);width:14px;height:14px;">
+            onchange="toggleDayClosed(${d},this.checked)" style="accent-color:var(--red);width:16px;height:16px;">
           Mark as closed (day off)
         </label>
       </div>
@@ -756,9 +825,6 @@ window.saveHours = async function() {
   document.getElementById('hoursSavedText').textContent = 'Saved: ' + new Date().toLocaleTimeString();
 };
 
-// ─────────────────────────────────────────
-//  PRODUCTS
-// ─────────────────────────────────────────
 function renderProducts() {
   const cont = document.getElementById('productsContainer');
   document.getElementById('productCount').textContent = currentProducts.length + ' items';
@@ -791,9 +857,6 @@ window.saveProducts = async function() {
   renderProducts();
 };
 
-// ─────────────────────────────────────────
-//  OFFERS
-// ─────────────────────────────────────────
 function renderOffers() {
   const list = document.getElementById('offersList');
   if (!currentOffers.length) {
@@ -830,9 +893,6 @@ window.saveOffers = async function() {
   document.getElementById('offersSavedText').textContent = 'Saved: ' + new Date().toLocaleTimeString();
 };
 
-// ─────────────────────────────────────────
-//  FIREBASE WRITE
-// ─────────────────────────────────────────
 async function saveToFirebase(path, data) {
   if (!db) { showToast('✅ Saved locally (Firebase not connected)'); return; }
   try {
@@ -846,9 +906,6 @@ async function saveToFirebase(path, data) {
   }
 }
 
-// ─────────────────────────────────────────
-//  TOAST & UTILS
-// ─────────────────────────────────────────
 let toastTimer;
 window.showToast = function(msg, isError = false) {
   const t = document.getElementById('toast');
